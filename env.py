@@ -521,7 +521,7 @@ def visualCard(card):
         arr.append(lst[int(getCardType(i))])
     return arr
 
-def run(listAgent,perData):
+def one_game(listAgent,perData):
     env,draw_pile,discard_pile = initEnv()
     for _ in range(getAgentSize()):
         dataOnePlayer = List()
@@ -554,13 +554,13 @@ def run(listAgent,perData):
             break
     return winner, perData
 
-def main(listAgent, times, perData):
+def normal_main(listAgent, times, perData):
     numWin = np.full(6, 0)
     pIdOrder = np.arange(5)
     for _ in range(times):
         np.random.shuffle(pIdOrder)
         shuffledListAgent = [listAgent[i] for i in pIdOrder]
-        winner, perData = run(shuffledListAgent, perData)
+        winner, perData = one_game(shuffledListAgent, perData)
         if winner == -1:
             numWin[-1] += 1
         else:
@@ -569,7 +569,7 @@ def main(listAgent, times, perData):
     return numWin, perData
 
 @njit
-def numbaRun(p0,p1,p2,p3,p4,perData,pIdOrder):
+def one_game_numba(p0,p1,p2,p3,p4,perData,pIdOrder):
     env,draw_pile,discard_pile = initEnv()
     for _ in range(getAgentSize()):
         dataOnePlayer = List()
@@ -621,12 +621,12 @@ def numbaRun(p0,p1,p2,p3,p4,perData,pIdOrder):
 
 
 @njit
-def numbaMain(p0, p1, p2, p3,p4, times, perData):
+def numba_main(p0, p1, p2, p3,p4, times, perData):
     numWin = np.full(6, 0)
     pIdOrder = np.arange(5)
     for _ in range(times):
         np.random.shuffle(pIdOrder)
-        winner, perData = numbaRun(p0, p1, p2, p3, p4, perData, pIdOrder)
+        winner, perData = one_game_numba(p0, p1, p2, p3, p4, perData, pIdOrder)
         if winner == -1:
             numWin[5] += 1
         else:
