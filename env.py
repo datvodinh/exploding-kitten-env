@@ -725,7 +725,7 @@ def numba_main_2(p0, n_game, per_player, level, *args):
         p1 = load_module_player(lst_agent_level[0]).Test
         p2 = load_module_player(lst_agent_level[1]).Test
         p3 = load_module_player(lst_agent_level[2]).Test
-        p4 = load_module_player(lst_agent_level[3]).Tests
+        p4 = load_module_player(lst_agent_level[3]).Test
         per_level = []
         for id in range(getAgentSize()-1):
             data_agent_env = list(np.load(f'{SHOT_PATH}Agent/{lst_agent_level[id]}/Data/{env_name}_{level}/Train.npy',allow_pickle=True))
