@@ -621,7 +621,7 @@ def numba_one_game(p0,p1,p2,p3,p4,perData,pIdOrder):
     
     for p_idx in range(5):
         env[57] = p_idx
-        p_state = getAgentState(env)
+        p_state = getAgentState(env,draw_pile,discard_pile)
         if pIdOrder[p_idx] == 0:
             act, perData = p0(p_state, perData)
         elif pIdOrder[p_idx] == 1:
