@@ -269,6 +269,7 @@ def executeMainAction(env,draw_pile,discard_pile,action):
         #print(f'Player {env[57]} shuffle!')
         np.random.shuffle(draw_pile)
         env[67] = 0
+        env[69:72] = 0 #reset future card
     elif action==5: #See the future
         #print(f'Player {env[57]} see the future!')
         if np.where(draw_pile!=-1)[0].shape[0]>=3:
