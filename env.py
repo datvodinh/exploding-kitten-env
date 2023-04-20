@@ -78,20 +78,20 @@ def getAgentState(env,draw_pile,discard_pile):
     state = np.zeros(getStateSize())
     #get card
     phase = env[67]
-        main_id = env[57]
-        nope_id = env[73]
-        last_action = env[72]
-        if phase==0:
+    main_id = env[57]
+    nope_id = env[73]
+    last_action = env[72]
+    if phase==0:
+        pIdx = int(main_id)
+    elif phase==1:
+        pIdx = int(nope_id)
+    elif phase==2:
+        pIdx = int(main_id)
+    elif phase==3:
+        if last_action==3:
+            pIdx = int(env[74])
+        else:
             pIdx = int(main_id)
-        elif phase==1:
-            pIdx = int(nope_id)
-        elif phase==2:
-            pIdx = int(main_id)
-        elif phase==3:
-            if last_action==3:
-                pIdx = int(env[74])
-            else:
-                pIdx = int(main_id)
     if env[67]==1: #nope turn
         state[0:12] = getAllNumCard(env,env[73])
         state[12:25] = discard_pile #discard pile
