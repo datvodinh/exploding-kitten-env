@@ -77,7 +77,22 @@ def getCardRange(type_card):
 def getAgentState(env,draw_pile,discard_pile):
     state = np.zeros(getStateSize())
     #get card
-    if env[67]==1:
+    phase = env[67]
+        main_id = env[57]
+        nope_id = env[73]
+        last_action = env[72]
+        if phase==0:
+            pIdx = int(main_id)
+        elif phase==1:
+            pIdx = int(nope_id)
+        elif phase==2:
+            pIdx = int(main_id)
+        elif phase==3:
+            if last_action==3:
+                pIdx = int(env[74])
+            else:
+                pIdx = int(main_id)
+    if env[67]==1: #nope turn
         state[0:12] = getAllNumCard(env,env[73])
         state[12:25] = discard_pile #discard pile
         state[25] = np.where(draw_pile!=-1)[0].shape[0] #number of card in draw pile
@@ -90,7 +105,7 @@ def getAgentState(env,draw_pile,discard_pile):
             state[82+i] = env[62:67][int(nope_turn[i])]
         state[86] = env[62:67][int(env[73])] #lose or not
 
-    elif env[67]==3 and env[72]==3: #
+    elif env[67]==3 and env[72]==3: #choose / take card turn, action favor
         state[0:12] = getAllNumCard(env,env[74])
         state[12:25] = discard_pile #discard pile
         state[25] = np.where(draw_pile!=-1)[0].shape[0] #number of card in draw pile
@@ -108,11 +123,12 @@ def getAgentState(env,draw_pile,discard_pile):
         state[25] = np.where(draw_pile!=-1)[0].shape[0] #number of card in draw pile
         state[26] = np.where(env[62:67]==1)[0].shape[0]
         state[27] = env[56]%2 #1 if action been Nope else 0
-        for i in range(3):
-            if env[69+i]!=-1:
-                card = np.zeros(13)
-                card[int(getCardType(env[69+i]))] = 1
-                state[28+13*i:41+13*i] = card# three card if use see the future
+        if pIdx == int(main_id):
+            for i in range(3):
+                if env[69+i]!=-1:
+                    card = np.zeros(13)
+                    card[int(getCardType(env[69+i]))] = 1
+                    state[28+13*i:41+13*i] = card# three card if use see the future
         state[67:71][int(env[67])] = 1 #phase
         state[71] = env[68] # number of card player have to draw
         if env[72]>=0:
