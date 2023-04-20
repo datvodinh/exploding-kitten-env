@@ -202,6 +202,7 @@ def changeTurn(env,num_card_draw=1):
         env[68] = num_card_draw
     env[67] = 0 # change phase to 0
     env[69:72] = 0
+    env[72] = -1 #reset last action
     return env
 
 @njit
@@ -286,7 +287,7 @@ def executeMainAction(env,draw_pile,discard_pile,action):
     elif action==9:
         #print(f'Player {env[57]} use five different cards!')
         env[67] = 3
-    
+    env[72] = -1 #reset last action
     return env,draw_pile,discard_pile
 
 @njit
