@@ -304,7 +304,6 @@ def executeMainAction(env,draw_pile,discard_pile,action):
     elif action==9:
         #print(f'Player {env[57]} use five different cards!')
         env[67] = 3
-    env[72] = -1 #reset last action
     return env,draw_pile,discard_pile
 
 @njit
