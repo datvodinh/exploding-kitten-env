@@ -31,12 +31,13 @@ def initEnv():
     env[62:67] = 1 # 0 if lose else 1
     env[67] = 0 #phase [0:main turn, 1:nope turn,2:steal card turn,3:choose/take card turn]
     env[68] = 1 # number of card player env[57] have to draw
-    env[69:72] = [0,0,0] #three card in see the future
+    env[69:72] = [-1,-1,-1] #three card in see the future
     env[72] = -1 # player env[57] last action
     env[73] = env[57]+1
     env[74] = -1 #player chosen in phase 2
 
     return env,draw_pile,discard_pile
+
 
 @njit
 def getNumCard(env,idx):
@@ -217,7 +218,7 @@ def changeTurn(env,num_card_draw=1):
     else:
         env[68] = num_card_draw
     env[67] = 0 # change phase to 0
-    env[69:72] = 0
+    env[69:72] = -1
     env[72] = -1 #reset last action
     return env
 
@@ -286,7 +287,7 @@ def executeMainAction(env,draw_pile,discard_pile,action):
         #print(f'Player {env[57]} shuffle!')
         np.random.shuffle(draw_pile)
         env[67] = 0
-        env[69:72] = 0 #reset future card
+        env[69:72] = -1 #reset future card
     elif action==5: #See the future
         #print(f'Player {env[57]} see the future!')
         if np.where(draw_pile!=-1)[0].shape[0]>=3:
