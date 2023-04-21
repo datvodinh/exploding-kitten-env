@@ -492,6 +492,7 @@ def stepEnv(env,draw_pile,discard_pile,action):
                 env[0:56][card] = env[57]
                 #used card go to Discard Pile
                 env[67] = 0
+                env[72] = -1
             else:
                 env[67] = 3
 
@@ -514,7 +515,7 @@ def stepEnv(env,draw_pile,discard_pile,action):
             type_card = action - 39
             if np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==6)[0].shape[0]>0:
                 env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==6)[0][0]] = env[57]
-        last_action = -1
+        env[72] = -1
         env[67] = 0
     return env,draw_pile,discard_pile
 @njit
