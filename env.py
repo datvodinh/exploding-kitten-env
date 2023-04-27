@@ -159,7 +159,8 @@ def getValidActions(state):
         
         if np.sum(available_card)>=5:#five of a kind
             list_action[9] = True
-
+        if np.sum(list_action)==0:
+            list_action[10] = 1
     elif state[68]==1: #Nope turn
         if state[0]>0:
             list_action[0] = 1 #Nope
@@ -377,7 +378,7 @@ def stepEnv(env,draw_pile,discard_pile,action):
         else:
             env[72] = action
             # print(f'Phase {phase} Player {main_id} choose action {action}')
-            if env[72]>=7:
+            if env[72]>=7 and env[72]<=9:
                 
                 env[67] = 4 #change to discard phase
                 if env[72]==7:
@@ -466,21 +467,24 @@ def stepEnv(env,draw_pile,discard_pile,action):
         last_action = env[72]
         if last_action==3:
             type_card = action - 15
-            all_card_to_take = np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==env[74])[0]
-            env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][int(all_card_to_take[0])] = env[57]
+            low,high = getCardRange(type_card) #range
+            all_card_to_take = np.where(env[low:high]==env[74])[0]
+            env[low:high][int(all_card_to_take[0])] = env[57]
 
 
         elif last_action==8:
             #take card
             type_card = action - 27
-            all_card_to_take = np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==env[74])[0]
+            low,high = getCardRange(type_card) #range
+            all_card_to_take = np.where(env[low:high]==env[74])[0]
             if all_card_to_take.shape[0]>0:
-                env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][int(all_card_to_take[0])] = env[57]
+                env[low:high][int(all_card_to_take[0])] = env[57]
             #used card go to Discard Pile
         elif last_action==9:
             type_card = action - 39
-            if np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==6)[0].shape[0]>0:
-                env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==6)[0][0]] = env[57]
+            low,high = getCardRange(type_card) #range
+            if np.where(env[low:high]==6)[0].shape[0]>0:
+                env[low:high][np.where(env[low:high]==6)[0][0]] = env[57]
         env[72] = -1
         env[67] = 0
     
@@ -488,12 +492,13 @@ def stepEnv(env,draw_pile,discard_pile,action):
         all_num_card = getAllNumCard(env,main_id)[:11]
         type_card = action - 51
         # try:
-        #     # print(f'Phase: {env[67]} Card {visualCard(np.array([getCardRange(type_card)[0]]))} has been discarded!')
+        #     # print(f'Phase: {env[67]} Card {visualCard(np.array([low]))} has been discarded!')
         # except:
         #     # print(type_card)
         #     raise NameError
+        low,high = getCardRange(type_card) #range
         if last_action==9:
-            env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==main_id)[0][0]] = 6
+            env[low:high][np.where(env[low:high]==main_id)[0][0]] = 6
             discard_pile[int(type_card)]+=1
             env[76:87][int(type_card)] = 1
             # print(env[76:87])
@@ -501,12 +506,12 @@ def stepEnv(env,draw_pile,discard_pile,action):
         else:
             if last_action==7:
                 for i in range(2):
-                    env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==env[57])[0][0]] = 6
+                    env[low:high][np.where(env[low:high]==env[57])[0][0]] = 6
                     discard_pile[int(type_card)]+=1
 
             elif last_action==8:
                 for i in range(3):
-                    env[getCardRange(type_card)[0]:getCardRange(type_card)[1]][np.where(env[getCardRange(type_card)[0]:getCardRange(type_card)[1]]==env[57])[0][0]] = 6
+                    env[low:high][np.where(env[low:high]==env[57])[0][0]] = 6
                     discard_pile[int(type_card)]+=1
             env[75] = 0
 
@@ -680,6 +685,7 @@ def one_game_normal(p0,pIdOrder,per_player,per1,per2,per3,per4,p1,p2,p3,p4):
                 pIdx = int(main_id)
         elif phase==4:
             pIdx = int(main_id)
+
         if pIdOrder[pIdx] == -1:
             action, per_player = p0(getAgentState(env,draw_pile,discard_pile), per_player)
         elif pIdOrder[pIdx] == 1:
