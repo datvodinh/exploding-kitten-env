@@ -18,11 +18,14 @@ Phase 2: Nope turn.
 
 
 Phase 3: Steal some card
-        Action 11 to 14:  choose player to take.
+        Action 11 to 15:  choose player to take.
 Phase 4: choose card to give / take
     Action 3: 
-        Action 15 to 26: player been chosen choose a card to give..
+        Action 15 to 27: player been chosen choose a card to give..
     Action 8:
-        Action 27 to 38: ask the card you want from other player
+        Action 27 to 39: ask the card you want from other player
     Action 9:
-        Action 39 to 50: choose card from Discard Pile
+        Action 39 to 51: choose card from Discard Pile
+
+Phase 5: Discard phase:
+    Action 51 to 62: Discard card (index respect to card.txt).
