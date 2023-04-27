@@ -35,6 +35,7 @@ def initEnv():
     env[72] = -1 # player env[57] last action
     env[73] = env[57]+1 #player id in nope turn 
     env[74] = -1 #player chosen in phase 2
+
     env[75] = 1 #num card main player have to discard
     env[76:87] = 0
     return env,draw_pile,discard_pile
@@ -106,7 +107,10 @@ def getAgentState(env,draw_pile,discard_pile):
 
     if last_action>=0:
             state[72:82][int(last_action)] = 1# player main turn last action
-
+    
+    for i in range(4):#number of card other people have
+            state[87+i] = np.where(env[0:56]==env[58+i])[0].shape[0]
+    
     if phase==1: #nope turn
         nope_turn = nopeTurn(nope_id)
         for i in range(4):
@@ -130,14 +134,12 @@ def getAgentState(env,draw_pile,discard_pile):
                     card = np.zeros(13)
                     card[int(getCardType(env[69+i]))] = 1
                     state[28+13*i:41+13*i] = card# three card if use see the future
-        state[67:71][int(phase)] = 1 #phase
         state[71] = env[68] # number of card player have to draw
         
         for i in range(4):
             state[82+i] = env[62:67][int(env[58+i])]
         state[86] = env[62:67][int(env[57])] #lose or not
-        for i in range(4):
-            state[87+i] = np.where(env[0:56]==env[58+i])[0].shape[0]
+        
 
     return state
 
