@@ -602,6 +602,7 @@ def one_game_numba(p0,pIdOrder,per_player,per1,per2,per3,per4,p1,p2,p3,p4):
     env[67] = 0
     for pIdx in range(5):
         env[57] = pIdx
+        env[58:62] = nopeTurn(env[57])
         if pIdOrder[pIdx] == -1:
             if pIdOrder[pIdx] == -1:
                 action, per_player = p0(getAgentState(env,draw_pile,discard_pile), per_player)
@@ -704,6 +705,7 @@ def one_game_normal(p0,pIdOrder,per_player,per1,per2,per3,per4,p1,p2,p3,p4):
     env[67] = 0
     for pIdx in range(5):
         env[57] = pIdx
+        env[58:62] = nopeTurn(env[57])
         if pIdOrder[pIdx] == -1:
             if pIdOrder[pIdx] == -1:
                 action, per_player = p0(getAgentState(env,draw_pile,discard_pile), per_player)
