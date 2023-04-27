@@ -123,10 +123,11 @@ def getAgentState(env,draw_pile,discard_pile):
         for i in range(4):
             state[82+i] = env[62:67][int(nope_turn[i])]
         state[86] = env[62:67][int(env[74])] #lose or not
-    elif phase==4: #discard phase
-        state[91:102] = env[76:87] #card have been discard (5 combo)
-        state[102] = env[75] # num card left have to discard
+    
     else:
+        if phase==4: #discard phase
+            state[91:102] = env[76:87] #card have been discard (5 combo)
+            state[102] = env[75] # num card left have to discard
         state[27] = env[56]%2 #1 if action been Nope else 0
         if pIdx == int(main_id):
             for i in range(3):

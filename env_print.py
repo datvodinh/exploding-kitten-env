@@ -441,7 +441,7 @@ def stepEnv(env,draw_pile,discard_pile,action):
                     if not checkIfNope(env): #if not been Nope
                         env,draw_pile,discard_pile = executeMainAction(env,draw_pile,discard_pile,env[72])
                 
-                        # print(f'Phase: {0} Action {env[72]} has been executed! ok3')
+                        print(f'Phase: {0} Action {last_action} has been executed!')
             
     elif phase==2:# phase 2: choose player to steal card. Only main_id can enter this phase
         if action==6:
