@@ -102,6 +102,8 @@ def getAgentState(env,draw_pile,discard_pile):
     state[12:25] = discard_pile #discard pile
     state[25] = np.where(draw_pile!=-1)[0].shape[0] #number of card in draw pile
     state[26] = np.where(env[62:67]==1)[0].shape[0]
+    state[27] = env[56]%2 #1 if action been Nope else 0
+
     if phase!=4: #not discard turn 
         state[67:71][int(phase)] = 1 #phase
 
@@ -128,7 +130,7 @@ def getAgentState(env,draw_pile,discard_pile):
         if phase==4: #discard phase
             state[91:102] = env[76:87] #card have been discard (5 combo)
             state[102] = env[75] # num card left have to discard
-        state[27] = env[56]%2 #1 if action been Nope else 0
+        
         if pIdx == int(main_id):
             for i in range(3):
                 if env[69+i]!=-1:
@@ -158,7 +160,7 @@ def getValidActions(state):
         if np.max(state[0:11])>=3 and np.sum(state[87:91])>0:#three of a kind
             list_action[8] = True
         
-        if np.sum(available_card)>=5:#five of a kind
+        if np.sum(available_card)>=5 and np.sum(state[12:24]) > 0:#five of a kind
             list_action[9] = True
         if np.sum(list_action)==0:
             list_action[10] = 1
@@ -181,7 +183,8 @@ def getValidActions(state):
         elif main_action==8:
             list_action[27:39] = 1
         elif main_action==9:
-            list_action[39:51] = 1
+            list_action[39:50] = ((state[12:23] - state[91:102]) > 0).astype(np.float64) #other
+            list_action[50] = (state[23] > 0) * 1.0 #defuse
 
     elif sum(state[67:71])==0: #discard turn
         last_action = np.argmax(state[72:82])
@@ -639,7 +642,7 @@ def n_game_numba(p0, num_game, per_player, list_other, per1, per2, per3, per4, p
     return win, per_player
 
 import importlib.util, json, sys
-from setup import SHORT_PATH
+from src.setup import SHORT_PATH
 
 def load_module_player(player):
     return  importlib.util.spec_from_file_location('Agent_player', f"{SHORT_PATH}Agent/{player}/Agent_player.py").loader.load_module()

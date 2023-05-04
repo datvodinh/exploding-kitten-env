@@ -142,6 +142,7 @@ def getAgentState(env,draw_pile,discard_pile):
     return state
 
 # @njit
+
 def getValidActions(state):
     list_action = np.zeros(getActionSize())
     available_card = (state[0:11]>0).astype(np.float64)
@@ -155,9 +156,10 @@ def getValidActions(state):
         if np.max(state[0:11])>=3 and np.sum(state[87:91])>0:#three of a kind
             list_action[8] = True
         
-        if np.sum(available_card)>=5:#five of a kind
+        if np.sum(available_card)>=5 and np.sum(state[12:24]) > 0:#five of a kind
             list_action[9] = True
-
+        if np.sum(list_action)==0:
+            list_action[10] = 1
     elif state[68]==1: #Nope turn
         if state[0]>0:
             list_action[0] = 1 #Nope
@@ -177,7 +179,8 @@ def getValidActions(state):
         elif main_action==8:
             list_action[27:39] = 1
         elif main_action==9:
-            list_action[39:51] = 1
+            list_action[39:50] = ((state[12:23] - state[91:102]) > 0).astype(np.float64) #other
+            list_action[50] = (state[23] > 0) * 1.0 #defuse
 
     elif sum(state[67:71])==0: #discard turn
         last_action = np.argmax(state[72:82])
